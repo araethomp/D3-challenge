@@ -58,8 +58,8 @@ function updateToolTip(chosenXAxis, circlesGroup) {
   if (chosenXAxis === "poverty") {
     label = "Poverty:";
   }
-  else if (chosenXAxis === "age") {
-    label = "Age:";
+  else if (chosenXAxis === "healthcare") {
+    label = "Healthcare:";
   }
   else { label = "Household Income:";
   }
@@ -81,28 +81,27 @@ function updateToolTip(chosenXAxis, circlesGroup) {
 }
 
 // Pull in data.csv
-d3.csv("assets/data/data.csv", data => {
-  console.log(data);
-// })
-//
-// // X axis
-// let x = d3.scaleLinear()
-//   .domain([0, 4000])
-//   .range([0, innerWidth]);
-// svg.append("g")
-//   .attr("transform", "translate(0," + innerHeight + ")")
-//   .call(d3.axisBottom(x));
-//
-// // Y axis
-// let y = d3.scaleLinear()
-//   .domain([0, 500000])
-//   .range([innerHeight, 0]);
-// svg.append("g")
-//   .call(d3.axisLeft(y));
-//
-// // Dots
-// svg.append("g")
-//   .selectAll("dot")
-//   .enter()
-//   .append("circle")
-//   .attr("cx", function (d) { return x(d.)})
+d3.csv("assets/data/data.csv").then(povertyData => {
+  povertyData.forEach(data =>{
+    data.poverty = +data.poverty
+    data.healthcare = +data.healthcare
+    data.income = +data.income
+  })
+  // xScale
+  let xLinearScale = xScale(povertyData, chosenXAxis);
+  // yScale
+  const yLinearScale = d3.scaleLinear()
+    .domain([0, d3.max(povertyData, d=> d.healthcare)])
+    .range([height, 0]);
+  // create axis functions
+  const bottomAxis = d3.axisBottom(xLinearScale);
+  const leftAxis = d3.axisLeft(yLinearScale);
+  // Append x axis
+  let xAxis = chartGroup.append("g")
+    .classed("x-axis", true)
+    .attr("transform", `translate(0, ${height})`)
+    .call(bottomAxis);
+  // Append y axis
+  chartGroup.append("g")
+    .call(leftAxis);  
+})
