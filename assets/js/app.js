@@ -205,3 +205,10 @@ d3.csv("assets/data/data.csv").then(povertyData => {
       }
     })
 }).catch(error => console.log(error));
+
+// Citation: 
+// Title: 12-Par_Hair_Metal_Conclusion (Class 3, Activity 12)
+//Author: Trilogy/University of Oregon
+// Date: 2021
+// Code Version: 1.0
+//  Availability: Class activity
